@@ -19,10 +19,18 @@ from django.urls import include, path
 
 import listings
 from listings import views
+from listings import forms
 from listings.views import hello
+from listings.views import signup
+
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('listings/', include('listings.urls')),
-   ]
+    path('signup_form/', SignupForm.as_view(), name ='signup'),
+    path('update_form/<pk>', ConfigUpdateView.as_view(), name='update_form'),
+    path('delete/<pk>', ConfigDeleteView.as_view(), name='delete'),
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout')
+]
