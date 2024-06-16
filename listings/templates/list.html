@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Listings</h1>
+<table>
+  {% for listing in object_list %}
+  <tr>
+    <td>{{ listing.title }}</td>
+    <td>{{ listing.location }}</td>
+    <td>{{ listing.description }}</td>
+    <td>{{ listing.price }}</td>
+    <td>{{ listing.rooms }}</td>
+    <td>{{ listing.sqft }}</td>
+    <td>{{ listing.photo_main }}</td>
+    <td>{{ listing.is_published }}</td>
+    <td>{{ listing.is_booked }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+</html>

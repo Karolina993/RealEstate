@@ -1,0 +1,16 @@
+{% block content %}
+    <h1>Real Estate Listings</h1>
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <h2>{{ listing.title }}</h2>
+                <p>{{ listing.description }}</p>
+                <p>Price: ${{ listing.price }}</p>
+                <p>Rooms: {{ listing.rooms }}</p>
+                <p>Square footage: {{ listing.sqft }} sqft</p>
+                <img src="{{ listing.photo_main.url }}">
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
