@@ -19,7 +19,11 @@ import listings
 from listings import views
 from listings import forms
 from django.urls import include, path
-from listings.views import hello, SignUpView, ListingsView, ListingsChangeView, ListingsDeleteView, user_list
+from listings.views import hello, SignUpView, ListingsView, ListingsChangeView, ListingsDeleteView, user_list, \
+    ListingsAddView
+
+from django.conf import settings
+from django.conf.urls.static import static
 from listings.views import signup
 
 
@@ -28,9 +32,12 @@ urlpatterns = [
     path('user_list/', views.user_list, name='user_list'),
     path('listings/', include('listings.urls')),
     path('accounts/sign_up', SignUpView.as_view(), name='sign_up'),
-    path('accounts/login', include('listings.urls')),
-    path('accounts/logout/', include('listings.urls')),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('change/<pk>', ListingsChangeView.as_view(), name='change'),
     path('delete/<pk>',ListingsDeleteView.as_view(), name='delete'),
+    path('hello', hello, name='hello'),
+    path('add/', ListingsAddView.as_view(), name='add'),
+    path('list/', ListingsView.as_view(), name='index')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-]

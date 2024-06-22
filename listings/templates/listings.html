@@ -7,8 +7,8 @@
                 <p>{{ listing.description }}</p>
                 <p>Price: ${{ listing.price }}</p>
                 <p>Rooms: {{ listing.rooms }}</p>
-                <p>Square footage: {{ listing.sqft }} sqft</p>
                 <img src="{{ listing.photo_main.url }}">
+                <p>Square footage: {{ listing.sqft }} sqft</p>
             </li>
         {% endfor %}
     </ul>
