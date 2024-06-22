@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from django.db import models
 from django.db.models import Model, CharField, IntegerField, DecimalField, TextField, FileField, BooleanField, DateTimeField
 
@@ -19,3 +21,7 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.title
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    no_clicks = models.IntegerField()
