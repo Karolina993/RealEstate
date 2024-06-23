@@ -40,6 +40,13 @@ class AdsForm(django.forms.ModelForm):
         model = Listing
         fields = '__all__'
 
+class ListingSearchForm(forms.Form):
+    title = forms.CharField(required=False, label='Title')
+    min_price = forms.DecimalField(required=False, label='Min Price')
+    max_price = forms.DecimalField(required=False, label='Max Price')
+    location = forms.CharField(required=False, label='Location')
+    rooms = forms.IntegerField(required=False, label='Rooms')
+
     # title = models.CharField(max_length=200)
     # location = models.TextField(max_length=128)
     # description = models.TextField(max_length=500)

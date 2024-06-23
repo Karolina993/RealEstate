@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Real Estate Listings</title>
+    <title>Search Listings</title>
 </head>
 <body>
-    <h2>Real Estate Listings</h2>
+    <h2>Search Listings</h2>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
     <ul>
         {% for listing in listings %}
             <li>
@@ -15,13 +19,12 @@
                 {% if listing.photo_main %}
                     <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
                 {% endif %}
-                <p>Clicks: {{ listing.no_clicks }}</p>
-                <a href="{% url 'details' listing.pk %}">Listing Details</a> <!-- Link do edycji -->
+                <p>Rooms: {{ listing.rooms }}</p>
+                <a href="{% url 'details' %}">View Listing</a>
             </li>
         {% empty %}
-            <li>No listings available.</li>
+            <li>No listings found.</li>
         {% endfor %}
     </ul>
-    <a href="{% url 'index' %}">Back to Listings</a>
 </body>
 </html>

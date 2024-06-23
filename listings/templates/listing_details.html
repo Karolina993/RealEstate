@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ listing.title }}</title>
+</head>
+<body>
+    <h2>{{ listing.title }}</h2>
+    <p>Price: {{ listing.price }}</p>
+    <p>Location: {{ listing.location }}</p>
+    <p>{{ listing.description }}</p>
+    {% if listing.photo_main %}
+        <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
+    {% endif %}
+    <p>Rooms: {{ listing.rooms }}</p>
+    <p>Square Feet: {{ listing.sqft }}</p>
+    <p>Posted on: {{ listing.posted }}</p>
+    <a href="{% url 'change' listing.pk %}">Edit Listing</a>
+    <a href="{% url 'index' %}">Back to Listings</a>
+</body>
+</html>

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +14,7 @@ from django.contrib.auth import login, logout
 import listings
 from .models import Listing
 from .forms import AdsForm
+from .forms import ListingSearchForm
 
 def hello(request):
     return HttpResponse('<h1>Welcome to the Home Page</h1>')
@@ -22,6 +24,7 @@ class ListingsView(LoginRequiredMixin, ListView):
     template_name = 'listings.html'
     context_object_name = 'listings'
     model = Listing
+    # fields = ['title', 'location', 'price',  'photo_main', 'user']
     permission_required = 'listings_viewer.view_listings'
     #
     # def get_queryset(self):
@@ -101,12 +104,19 @@ class ListingsAddView(LoginRequiredMixin,CreateView):
 #       form = ListingsAddView()
 #     return render(request, 'registration/login.html', {'form': form})
 
-class ListingsChangeView(PermissionRequiredMixin, UpdateView):
-    model = listings
-    template_name = 'form.html'
+class ListingsChangeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Listing
+    template_name = 'listing_edit.html'
+    fields = ['title','location', 'description','price', 'rooms', 'sqft', 'photo_main', 'is_published', 'is_booked', 'posted', 'user']
     form_class = AdsForm
     success_url = reverse_lazy('index')
-    #permission_required = 'listing_viewer.change_listing'
+    permission_required = 'listing_viewer.change_listing'
+
+    def test_func(self):
+        listing = self.get_object()
+        return self.request.user == listing.user
+
+
 
 class IsSuperuserMixin(UserPassesTestMixin):
     def test_func(self):
@@ -120,3 +130,43 @@ class ListingsDeleteView(IsSuperuserMixin, DeleteView):
 
 
 
+
+class ListingSearchView(ListView):
+    model = Listing
+    template_name = 'listing_search.html'
+    context_object_name = 'listings'
+
+    def get_queryset(self):
+        queryset = Listing.objects.all()
+        form = ListingSearchForm(self.request.GET)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            min_price = form.cleaned_data.get('min_price')
+            max_price = form.cleaned_data.get('max_price')
+            location = form.cleaned_data.get('location')
+            rooms = form.cleaned_data.get('rooms')
+
+            if title:
+                queryset = queryset.filter(title__icontains=title)
+            if min_price:
+                queryset = queryset.filter(price__gte=min_price)
+            if max_price:
+                queryset = queryset.filter(price__lte=max_price)
+            if location:
+                queryset = queryset.filter(location__icontains=location)
+            if rooms:
+                queryset = queryset.filter(rooms=rooms)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ListingSearchForm(self.request.GET)
+        return context
+
+class ListingDetailsView(DetailView):
+        model = Listing
+        template_name = 'listing_details.html'
+        context_object_name = listings
+
+ 
