@@ -18,10 +18,10 @@ class Listing(models.Model):
     is_published = models.BooleanField(default=True)
     is_booked = models.BooleanField(default=False)
     posted = models.DateTimeField(auto_now_add=True)
+    User = models.CharField(max_length=50, default = 'anonim')
+    #listing_id = models.ForeignKey(User, on_delete=models.CASCADE, null= True)
+
 
     def __str__(self):
         return self.title
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    no_clicks = models.IntegerField()

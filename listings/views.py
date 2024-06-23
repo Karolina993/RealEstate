@@ -1,39 +1,39 @@
 from django.contrib.auth.models import User
+from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SignUpForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 import listings
-from .models import Listing, Profile
+from .models import Listing
 from .forms import AdsForm
 
 def hello(request):
     return HttpResponse('<h1>Welcome to the Home Page</h1>')
 
-class ListingList(PermissionRequiredMixin, ListView):
+#@login_required
+class ListingsView(LoginRequiredMixin, ListView):
     template_name = 'listings.html'
-    model = listings
-    #permission_required = 'stock_viewer.view_stock'
-@login_required
-
-def listing_list(request):
-    Listing.objects.all()
-    if request.method == 'POST':
-        form = AdsForm(request.POST)
-        if form.is_valid():
-            form = form.save(commit=False)
-            form.user = request.user
-            form.save()
-            return redirect('list')
-    else:
-         form = AdsForm()
-    return render(request, 'registration/login.html', {'form': form})
-   # return render(request, 'listings.html', {'listings': listings})
+    context_object_name = 'listings'
+    model = Listing
+    permission_required = 'listings_viewer.view_listings'
+    #
+    # def get_queryset(self):
+    #     return Listing.objects.filter(user=self.request.user)
+    #
+    # def get(self, request, *args, **kwargs):
+    #     listing_id = kwargs.get('pk')
+    #     if listing_id:
+    #         listing = get_object_or_404(Listing, id=listing_id, user=request.user)
+    #         listing.no_clicks += 1
+    #         listing.save()
+    #     return super().get(request, *args, **kwargs)
 
 def signup(request):
     if request.method == 'POST':
@@ -69,18 +69,18 @@ def user_list(request):
     users = User.objects.all()
     return render(request, 'users/user_list.html', {'users': users})
 
-class ListingsView(PermissionRequiredMixin, ListView):
-    template_name = 'list.html'
-    model = listings
-    permission_required = 'listing_viewer.view_listing'
+# class ListingsView(LoginRequiredMixin, ListView):
+#     template_name = 'list.html'
+#     model = listings
+#     login_url = 'login'
+#     success_url = reverse_lazy('index')
+#     permission_required = 'listing_viewer.view_listing'
 
-    def get(self, request, *args, **kwargs):
-        profile = Profile.objects.get(user=request.user)
-        profile.no_clicks += 1
-        profile.save()
-        return super().get(request, args, kwargs)
-
-from django.contrib.auth.mixins import LoginRequiredMixin
+    # def get(self, request, *args, **kwargs):
+    #     profile = Profile.objects.get(user=request.user)
+    #     profile.no_clicks += 1
+    #     profile.save()
+    #     return super().get(request, args, kwargs)
 
 #@login_required
 class ListingsAddView(LoginRequiredMixin,CreateView):
@@ -89,7 +89,7 @@ class ListingsAddView(LoginRequiredMixin,CreateView):
         model = listings
         login_url = 'login'
         success_url = reverse_lazy('index')
-#        permission_required = 'listing_viewer.add_listing'
+#       permission_required = 'listing_viewer.add_listing'
 
 # def ListingsAddView(request):
 #     if request.method == 'POST':
@@ -106,7 +106,7 @@ class ListingsChangeView(PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     form_class = AdsForm
     success_url = reverse_lazy('index')
-    permission_required = 'listing_viewer.change_listing'
+    #permission_required = 'listing_viewer.change_listing'
 
 class IsSuperuserMixin(UserPassesTestMixin):
     def test_func(self):

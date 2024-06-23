@@ -9,6 +9,7 @@
 <table>
   {% for listing in object_list %}
   <tr>
+    <td>{{ listing.listing_id}}/td>
     <td>{{ listing.title }}</td>
     <td>{{ listing.location }}</td>
     <td>{{ listing.description }}</td>
@@ -18,6 +19,7 @@
     <td>{{ listing.sqft }}</td>
     <td>{{ listing.is_published }}</td>
     <td>{{ listing.is_booked }}</td>
+    <td>{{ listing.User }}</td>
   </tr>
   {% endfor %}
 </table>

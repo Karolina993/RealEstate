@@ -1,16 +1,25 @@
-{% block content %}
-    <h1>Real Estate Listings</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Estate Listings</title>
+</head>
+<body>
+    <h2>Real Estate Listings</h2>
     <ul>
         {% for listing in listings %}
             <li>
-                <h2>{{ listing.title }}</h2>
+                <h3>{{ listing.title }}</h3>
+                <p>Price: {{ listing.price }}</p>
+                <p>Location: {{ listing.location }}</p>
                 <p>{{ listing.description }}</p>
-                <p>Price: ${{ listing.price }}</p>
-                <p>Rooms: {{ listing.rooms }}</p>
-                <img src="{{ listing.photo_main.url }}">
-                <p>Square footage: {{ listing.sqft }} sqft</p>
+                {% if listing.photo_main %}
+                    <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
+                {% endif %}
+                <p>Clicks: {{ listing.no_clicks }}</p>
             </li>
+        {% empty %}
+            <li>No listings available.</li>
         {% endfor %}
     </ul>
-{% endblock %}
-
+</body>
+</html>

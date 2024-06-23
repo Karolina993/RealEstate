@@ -1,11 +1,5 @@
-{% extends "listings.html" %}
-
-{% block content %}
  <form method="post" enctype="multipart/form-data">
    {% csrf_token %}
    <table>{{ form }}</table>
    <input type="submit" value="Submit" class="btn btn-primary">
  </form>
-{% endblock %}
-
-
