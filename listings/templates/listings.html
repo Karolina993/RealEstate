@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Estate Listings</title>
+</head>
+<body>
+    <h2>Real Estate Listings</h2>
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <h3>{{ listing.title }}</h3>
+                <p>Price: {{ listing.price }}</p>
+                <p>Location: {{ listing.location }}</p>
+                <p>{{ listing.description }}</p>
+                {% if listing.photo_main %}
+                    <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
+                {% endif %}
+                <p>Clicks: {{ listing.no_clicks }}</p>
+                <a href="{% url 'details' listing.pk %}">Listing Details</a> <!-- Link do edycji -->
+            </li>
+        {% empty %}
+            <li>No listings available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'index' %}">Back to Listings</a>
+</body>
+</html>
