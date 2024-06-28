@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Listings</title>
+</head>
+<body>
+    <h2>Search Listings</h2>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <h3>{{ listing.title }}</h3>
+                <p>Price: {{ listing.price }}</p>
+                <p>Location: {{ listing.location }}</p>
+                <p>{{ listing.description }}</p>
+                {% if listing.photo_main %}
+                    <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
+                {% endif %}
+                <p>Rooms: {{ listing.rooms }}</p>
+                <a href="{% url 'details' %}">View Listing</a>
+            </li>
+        {% empty %}
+            <li>No listings found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
