@@ -1,0 +1,17 @@
+<!-- listing_confirm_delete.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete this listing</title>
+</head>
+<body>
+    <h2>Are you sure you want to delete "{{ object.title }}"?</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <input type="submit" value="Yes, delete" />
+            <a href="{% url 'my_listings' %}">cancel</a>
+        </p>
+    </form>
+</body>
+</html>
