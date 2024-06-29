@@ -165,8 +165,8 @@ class ListingSearchView(ListView):
         return context
 
 class ListingDetailsView(DetailView):
-        model = Listing
-        template_name = 'listing_details.html'
-        context_object_name = listings
+    model = Listing
+    template_name = 'listing_details.html'
+    context_object_name = 'listing'
 
  

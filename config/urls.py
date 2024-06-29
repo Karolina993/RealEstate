@@ -41,6 +41,6 @@ urlpatterns = [
     path('add/', ListingsAddView.as_view(), name='add'),
     path('list/', ListingsView.as_view(), name='index'),
     path('search',ListingSearchView.as_view(), name='search'),
-    path('details/<int:pk>/', ListingDetailsView.as_view(),name ='details')
+    path('details/<str:pk>/', ListingDetailsView.as_view(),name ='listing_details')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

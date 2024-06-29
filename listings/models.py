@@ -8,7 +8,7 @@ def image_path(instance, filename):
 
 
 class Listing(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, primary_key=True)
     location = models.TextField(max_length=128)
     description = models.TextField(max_length=500)
     price = models.IntegerField()
