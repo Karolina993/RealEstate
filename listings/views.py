@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
+from django.views import View
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,10 +15,13 @@ from django.contrib.auth import login, logout
 import listings
 from .models import Listing
 from .forms import AdsForm
+
+from .mixins import UserIsOwnerMixin
+
 from .forms import ListingSearchForm
 
-def hello(request):
-    return HttpResponse('<h1>Welcome to the Home Page</h1>')
+def hello_view(request):
+    return render(request, 'hello.html')
 
 #@login_required
 class ListingsView(LoginRequiredMixin, ListView):
@@ -37,6 +41,14 @@ class ListingsView(LoginRequiredMixin, ListView):
     #         listing.no_clicks += 1
     #         listing.save()
     #     return super().get(request, *args, **kwargs)
+
+class MyListingsView(LoginRequiredMixin, ListView):
+    model = Listing
+    template_name = 'my_listings.html'
+    context_object_name = 'listings'
+
+    def get_queryset(self):
+        return Listing.objects.filter(user=self.request.user)
 
 def signup(request):
     if request.method == 'POST':
@@ -59,15 +71,14 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('add')
+            return redirect('my_listings')
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
 
 def logout_view(request):
-    if request.method == 'POST':
-        logout(request)
-        return redirect('hello')
+    logout(request)
+    return redirect('hello')
 def user_list(request):
     users = User.objects.all()
     return render(request, 'users/user_list.html', {'users': users})
@@ -90,9 +101,13 @@ class ListingsAddView(LoginRequiredMixin,CreateView):
         form_class = AdsForm
         template_name = 'form.html'
         model = listings
-        login_url = 'login'
+        #login_url = 'login'
         success_url = reverse_lazy('index')
 #       permission_required = 'listing_viewer.add_listing'
+
+def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 # def ListingsAddView(request):
 #     if request.method == 'POST':
@@ -104,28 +119,32 @@ class ListingsAddView(LoginRequiredMixin,CreateView):
 #       form = ListingsAddView()
 #     return render(request, 'registration/login.html', {'form': form})
 
-class ListingsChangeView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ListingsChangeView(LoginRequiredMixin, UserIsOwnerMixin, UserPassesTestMixin, UpdateView):
     model = Listing
     template_name = 'listing_edit.html'
-    fields = ['title','location', 'description','price', 'rooms', 'sqft', 'photo_main', 'is_published', 'is_booked', 'posted', 'user']
+    #fields = ['title','location', 'description','price', 'rooms', 'sqft', 'photo_main', 'is_published', 'is_booked', 'posted']
     form_class = AdsForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('my_listings')
     permission_required = 'listing_viewer.change_listing'
 
+    def get_success_url(self):
+        return reverse ('index')
+
+    # def test_func(self):
+    #     listing = self.get_object()
+    #     return self.request.user == listing.user
+
     def test_func(self):
-        listing = self.get_object()
-        return self.request.user == listing.user
-
-
+        return self.get_object().user == self.request.user
 
 class IsSuperuserMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
 
-class ListingsDeleteView(IsSuperuserMixin, DeleteView):
+class ListingsDeleteView(IsSuperuserMixin, DeleteView, LoginRequiredMixin):
     model = listings
     template_name = 'delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('my_listings')
 
 
 
@@ -168,5 +187,11 @@ class ListingDetailsView(DetailView):
     model = Listing
     template_name = 'listing_details.html'
     context_object_name = 'listing'
+
+class UserIsOwnerMixin(UserPassesTestMixin):
+    def test_func(self):
+        listing_title = self.kwargs.get('pk')
+        listing = get_object_or_404(Listing, pk=listing_title)
+        return self.request.user == listing.user
 
  

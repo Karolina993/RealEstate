@@ -18,7 +18,7 @@ class Listing(models.Model):
     is_published = models.BooleanField(default=True)
     is_booked = models.BooleanField(default=False)
     posted = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null= True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name= 'listing')
 
 
     def __str__(self):

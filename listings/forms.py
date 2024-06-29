@@ -17,17 +17,17 @@ from django.contrib.auth.models import User
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
-@atomic
-def save(self, commit=True):
-        self.instance.is_active = True
-        user = super().save(commit)
-        profile = Profile(user=user, email=email)
-        if commit:
-            profile.save()
-        return user
+# @atomic
+# def save(self, commit=True):
+#         self.instance.is_active = True
+#         user = super().save(commit)
+#         profile = Profile(user=user, email=email)
+#         if commit:
+#             profile.save()
+#         return user
 class Meta:
     model = User
-    fields = ['username', 'email', 'password1', 'password2']
+    fields = ['email', 'password1', 'password2']
 
 
 
