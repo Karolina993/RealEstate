@@ -16,7 +16,7 @@
                     <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
                 {% endif %}
                 <p>Clicks: {{ listing.no_clicks }}</p>
-                <a href="{% url 'details' listing.pk %}">Listing Details</a> <!-- Link do edycji -->
+                <a href="{% url 'listing_details' listing.pk %}">Listing Details</a> <!-- Link do edycji -->
             </li>
         {% empty %}
             <li>No listings available.</li>
