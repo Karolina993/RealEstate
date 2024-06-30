@@ -33,16 +33,16 @@ urlpatterns = [
     path('user_list/', views.user_list, name='user_list'),
     path('listings/', include('listings.urls')),
     path('my_listings/', MyListingsView.as_view(), name='my_listings'),
-    path('accounts/sign_up', SignUpView.as_view(), name='sign_up'),
-    path('login/', views.login_view, name='login'),
+    path('accounts/sign_up/', SignUpView.as_view(), name='sign_up'),
+    path('accounts/login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('change/<str:pk>', ListingsChangeView.as_view(), name='change'),
+    path('change/<str:pk>/', ListingsChangeView.as_view(), name='change'),
     path('list/<str:pk>/edit/', ListingsChangeView.as_view(), name='listing_edit'),
-    path('delete/<pk>',ListingsDeleteView.as_view(), name='delete'),
-    path('hello', views.hello_view, name='hello'),
+    path('list/<str:pk>/delete/', ListingsDeleteView.as_view(), name='delete'),
+    path('hello/', views.hello_view, name='hello'),
     path('add/', ListingsAddView.as_view(), name='add'),
     path('list/', ListingsView.as_view(), name='index'),
-    path('search',ListingSearchView.as_view(), name='search'),
+    path('search/',ListingSearchView.as_view(), name='search'),
     path('details/<str:pk>/', ListingDetailsView.as_view(),name ='listing_details')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

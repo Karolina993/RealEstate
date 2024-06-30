@@ -20,7 +20,7 @@
                     <img src="{{ listing.photo_main.url }}" alt="Image of {{ listing.title }}">
                 {% endif %}
                 <p>Rooms: {{ listing.rooms }}</p>
-                <a href="{% url 'details' %}">View Listing</a>
+                <a href="{% url 'listing_details' listing.pk %}">View Listing</a>
             </li>
         {% empty %}
             <li>No listings found.</li>

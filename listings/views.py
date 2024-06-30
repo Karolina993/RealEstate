@@ -142,10 +142,19 @@ class IsSuperuserMixin(UserPassesTestMixin):
         return self.request.user.is_superuser
 
 class ListingsDeleteView(IsSuperuserMixin, DeleteView, LoginRequiredMixin):
-    model = listings
-    template_name = 'delete.html'
+    model = Listing
+    template_name = 'listing_delete.html'
     success_url = reverse_lazy('my_listings')
+    permission_required = 'listing_viewer.delete_listing'
 
+    class IsSuperuserMixin(UserPassesTestMixin):
+        def test_func(self):
+            return self.request.user.is_superuser
+
+    def get_success_url(self):
+        return reverse ('my_listings')
+    def test_func(self):
+        return self.get_object().user == self.request.user
 
 
 
